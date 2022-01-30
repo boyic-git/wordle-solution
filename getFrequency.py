@@ -40,7 +40,28 @@ def getProb(word=None):
         print("{} is probably not a word".format(word))
     return probs
 
+## penalize words with repeat letters by remove it from results
+def getProbWithoutRepeat(word=None):
+    count, words, freqs = getFreq()
+    for letter in freqs:
+        freqs[letter] = freqs[letter]/count/5
+    probs = {}
+    for w in words:
+        temp = 0
+        if len(set(w)) == 5:
+            for c in w:
+                temp += log(freqs[c])
+            probs[w] = temp
+
+    if word and word in probs:
+        return probs[word]
+    elif word and word not in probs:
+        print("{} is probably not a word or contains repeat letters".format(word))
+    
+    sortedFreq = sorted(list(probs.items()), key=lambda x:x[1], reverse=True)
+    return sortedFreq
+
 
 if __name__ == "__main__":
     count, w, freq = getFreq()
-    print(getProb("hello"))
+    print(getProbWithoutRepeat()[:10])
