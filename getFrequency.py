@@ -1,10 +1,9 @@
-import collections
-from loadWords import load_words
+from loadWords import loadWords
 from collections import Counter
 from math import log
 
 def getFreq():
-    allWords = load_words()
+    allWords = loadWords()
     freq = Counter()
     count = 0
     words = []
@@ -21,9 +20,12 @@ def getFreq():
     return count, words, dict(freq.most_common(26))
     # print(count, freq.most_common(26))
 
-## get probability of all words as a dict
-## or get probability of a specific word
+
 def getProb(word=None):
+    """
+    get probability of all words as a dict,
+    or get probability of a specific word
+    """
     count, words, freqs = getFreq()
     for letter in freqs:
         freqs[letter] = freqs[letter]/count/5
@@ -62,6 +64,31 @@ def getProbWithoutRepeat(word=None):
     return sortedFreq
 
 
+def getProbWithoutRepeatDeep(n=None):
+    """
+    remove words with repeat letters;
+    remove words with same five letter but different combinations
+    """
+    count, words, freqs = getFreq()
+    for letter in freqs:
+        freqs[letter] = freqs[letter]/count/5
+    probs = {}
+    wordSet = set()
+    for w in words:
+        temp = 0
+        if len(set(w)) == 5:
+            if tuple(sorted(set(w))) not in wordSet:
+                wordSet.add(tuple(sorted(set(w))))
+                for c in w:
+                    temp += log(freqs[c])
+                probs[w] = temp
+
+    sortedFreq = sorted(list(probs.items()), key=lambda x:x[1], reverse=True)
+    if not n:
+        return sortedFreq
+    else:
+        return sortedFreq[:n]
+
 if __name__ == "__main__":
     count, w, freq = getFreq()
-    print(getProbWithoutRepeat()[:10])
+    print(getProbWithoutRepeatDeep()[:20])
