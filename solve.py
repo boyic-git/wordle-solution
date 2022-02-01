@@ -5,7 +5,7 @@ from collections import Counter, defaultdict
 
 def solve(bank, word, result, wrong):
     correct, maybe, wrong = decodeResult(word, result, wrong)
-    print(correct, maybe, wrong)
+    # print(correct, maybe, wrong)
 
     newBank = []
     for w in bank:
@@ -58,7 +58,7 @@ if __name__ == "__main__":
     result = None
     word = None
     wrong = set()
-    print("erato" in bank)
+
     while True:
         if i == 1:
             word = randomGuess()
