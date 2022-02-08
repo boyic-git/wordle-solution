@@ -53,11 +53,12 @@ def test(n=10):
 
 
 if __name__ == "__main__":
-    # bank = loadFromWordle()
+    bank = loadFromWordle()
+    print(len(bank))
     # for i in range(10):
     #     guess = bank[randint(0, len(bank)-1)]
     #     answer = bank[randint(0, len(bank)-1)]
     #     result = check(guess, answer)
     #     print(guess, answer, result)
     # print(check("bbbca", "aabba"))
-    test(100)
+    # test(100)

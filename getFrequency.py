@@ -1,4 +1,5 @@
-from loadWords import loadWords
+from torch import ge
+from loadWords import loadFromWordle, loadWords
 from collections import Counter
 from math import log
 
@@ -89,6 +90,39 @@ def getProbWithoutRepeatDeep(n=None):
     else:
         return sortedFreq[:n]
 
+def getFrequencyByPosition():
+    words = loadFromWordle()
+    countsAtPosition = [dict(zip([chr(ord("a")+i) for i in range(26)], [0 for _ in range(26)])) for _ in range(5)]
+    for word in words:
+        for i,w in enumerate(word):
+            countsAtPosition[i][w] += 1
+    numOfWords = len(words)
+    for pos in countsAtPosition:
+        for w in pos:
+            pos[w] /= numOfWords
+    return countsAtPosition
+
+def getFreqOfWordsByPosition():
+    counts = getFrequencyByPosition()
+    freq = []
+    words = loadFromWordle()
+    for word in words:
+        temp = 0
+        tempSet = set()
+        for i,w in enumerate(word):
+            temp += log(counts[i][w])
+            tempSet.add(w)
+        if len(tempSet) != 5:
+            temp -= 100
+        freq.append([word, temp])
+    return freq
+
+
 if __name__ == "__main__":
-    count, w, freq = getFreq()
-    print(getProbWithoutRepeatDeep()[:20])
+    # count, w, freq = getFreq()
+    # print(getProbWithoutRepeatDeep()[:20])
+    # counts = getFrequencyByPosition()
+    # print(counts[0]["a"])
+    freq = getFreqOfWordsByPosition()
+    freq.sort(key=lambda x:x[1], reverse=True)
+    print(freq[:10])
